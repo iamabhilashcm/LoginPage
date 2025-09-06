@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login Page with Toggle Sound & Eye Icons</title>
   <style>
     :root {
@@ -21,14 +21,94 @@
     }
 
     body.dark {
-      --bg-color: #181818;
-      --card-bg: #282828;
-      --text-color: #f0f0f0;
-      --input-border: #444;
-      --link-color: #66aaff;
-      --error-background: #4b1c1c;
+      --bg-color: #181a20;
+      --card-bg: #23262f;
+      --text-color: #f1f1f1;
+      --input-border: #353945;
+      --link-color: #82aaff;
+      --error-background: #2d1a1a;
       --error-color: #ff7a7a;
-      --button-text-color: #ffffff;
+      --button-text-color: #fff;
+      /* New enhancements */
+      --shadow-dark: 0 4px 24px rgba(0, 0, 0, 0.45);
+      --primary-color: #ff5252;
+      --hover-color: #ff1744;
+    }
+
+    /* Enhance background with a subtle gradient */
+    body.dark {
+      background: linear-gradient(135deg, #181a20 0%, #23262f 60%, #20222b 100%);
+      transition: background 0.5s cubic-bezier(.4, 0, .2, 1), color 0.3s;
+    }
+
+    /* Card shadow and border for depth */
+    body.dark .login {
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow-dark);
+      border: 1px solid #23262f;
+      transition: background-color 0.4s, box-shadow 0.4s;
+    }
+
+    /* Input fields: glassy effect and border */
+    body.dark .login__input {
+      background: rgba(36, 37, 42, 0.7);
+      border: 1px solid var(--input-border);
+      color: var(--text-color);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+    }
+
+    /* Input focus: accent border */
+    body.dark .login__input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(255, 82, 82, 0.15);
+    }
+
+    /* Button: vibrant color and glow on hover */
+    body.dark .login__button {
+      background: linear-gradient(90deg, #ff5252 0%, #ff1744 100%);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(255, 23, 68, 0.15);
+      border: none;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    body.dark .login__button:hover {
+      background: linear-gradient(90deg, #ff1744 0%, #ff5252 100%);
+      box-shadow: 0 4px 16px rgba(255, 23, 68, 0.25);
+    }
+
+    /* Links: brighter and underline on hover */
+    body.dark .login__forgot-password a {
+      color: var(--link-color);
+      text-shadow: 0 1px 4px #23262f;
+    }
+
+    body.dark .login__forgot-password a:hover {
+      text-decoration: underline;
+      color: #fff;
+    }
+
+    /* Error message: more contrast */
+    body.dark .login__error {
+      background-color: var(--error-background);
+      color: var(--error-color);
+      border: 1px solid #ff7a7a;
+    }
+
+    /* Toggle switch: dark track and thumb */
+    body.dark .slider {
+      background: linear-gradient(90deg, #23262f 0%, #353945 100%);
+    }
+
+    body.dark .slider::before {
+      background: #23262f;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Eye icon: lighter in dark mode */
+    body.dark .toggle-visibility svg {
+      stroke: #fff;
     }
 
     * {
@@ -39,13 +119,24 @@
 
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-color);
+      background: linear-gradient(135deg, #e0e7ff 0%, #f5f7fa 100%);
       color: var(--text-color);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      transition: background 0.5s cubic-bezier(.4, 0, .2, 1), color 0.3s;
+      position: relative;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: url("https://www.transparenttextures.com/patterns/cubes.png") repeat;
+      opacity: 0.04;
+      pointer-events: none;
     }
 
     main {
@@ -53,11 +144,12 @@
       padding: 1rem;
     }
 
-    /* === Toggle Switch === */
+    /* === Dark Mode Toggle Switch === */
     .theme-switch-wrapper {
       position: absolute;
       top: 1rem;
       right: 1rem;
+      user-select: none;
     }
 
     .theme-switch {
@@ -72,50 +164,90 @@
 
     .slider {
       position: relative;
-      width: 50px;
-      height: 26px;
-      background-color: #ccc;
+      width: 54px;
+      height: 28px;
+      background: linear-gradient(90deg, #ffe082 0%, #90caf9 100%);
       border-radius: 34px;
-      transition: background-color 0.3s ease;
+      transition: background 0.4s cubic-bezier(.4, 0, .2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+      overflow: visible;
     }
 
     .slider::before {
       content: "";
       position: absolute;
-      height: 22px;
+      left: 3px;
+      top: 3px;
       width: 22px;
-      left: 2px;
-      bottom: 2px;
-      background-color: #ffffff;
+      height: 22px;
+      background: #fff;
       border-radius: 50%;
-      transition: transform 0.3s ease;
-    }
-
-    .slider .icon {
-      position: absolute;
-      top: 50%;
-      left: 2px;
-      transform: translateY(-50%);
-      font-size: 14px;
-      color: #333;
-      transition: left 0.3s ease, transform 0.3s ease;
-      z-index: 2;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      transition: left 0.35s cubic-bezier(.4, 0, .2, 1), background 0.3s;
+      z-index: 1;
     }
 
     input:checked+.slider {
-      background-color: #444;
+      background: linear-gradient(90deg, #263238 0%, #37474f 100%);
     }
 
     input:checked+.slider::before {
-      transform: translateX(24px);
+      left: 29px;
+      background: #222;
     }
 
-    .slider .icon::before {
-      content: "☀️";
+    .slider:active::before {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
     }
 
-    body.dark .slider .icon::before {
-      content: "🌙";
+    .slider .icon {
+      pointer-events: none;
+    }
+
+    .slider .sun,
+    .slider .moon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%) scale(1);
+      font-size: 18px;
+      z-index: 2;
+      user-select: none;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .slider .sun {
+      left: 8px;
+      color: #fbc02d;
+      opacity: 1;
+    }
+
+    .slider .moon {
+      right: 8px;
+      color: #ffd700;
+      opacity: 0;
+      transform: translateY(-50%) scale(0.8);
+    }
+
+    /* Show/hide icons based on theme */
+    body.dark .slider .sun {
+      opacity: 0;
+      transform: translateY(-50%) scale(0.8);
+    }
+
+    body.dark .slider .moon {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
+
+    /* Focus ring for accessibility */
+    .theme-switch input:focus+.slider::before {
+      outline: 2px solid #1976d2;
+      outline-offset: 2px;
     }
 
     /* === Login Box === */
@@ -127,6 +259,7 @@
       border-radius: 8px;
       box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
       transition: background-color 0.3s ease;
+      position: relative;
     }
 
     .login__title {
@@ -155,14 +288,26 @@
       background-color: transparent;
       color: var(--text-color);
       height: 40px;
-      /* ensure consistent height */
       line-height: 1.2;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      background: rgba(255, 255, 255, 0.6);
+      transition: box-shadow 0.3s, border-color 0.3s, background 0.3s;
+    }
+
+    body.dark .login__input {
+      background: rgba(36, 37, 42, 0.85);
+      border: 1px solid var(--input-border);
     }
 
     .login__input:focus {
       outline: none;
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 2px rgba(230, 0, 0, 0.1);
+      box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.08);
+      background: #fff;
+    }
+
+    body.dark .login__input:focus {
+      background: #23262f;
     }
 
     .login__forgot-password {
@@ -209,9 +354,9 @@
     /* Eye icon button */
     .toggle-visibility {
       position: absolute;
-      top: 0;
-      bottom: 0;
+      top: 50%;
       right: 0.75rem;
+      transform: translateY(-50%);
       background: none;
       border: none;
       padding: 0;
@@ -222,6 +367,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      user-select: none;
     }
 
     .toggle-visibility svg {
@@ -236,7 +382,6 @@
     .masked-username {
       -webkit-text-security: disc;
       text-security: disc;
-      /* non-standard but supported in some browsers */
       font-family: monospace;
     }
 
@@ -249,27 +394,38 @@
         font-size: 1.5rem;
       }
     }
+
+    .slider .sun::before {
+      content: "☀️";
+    }
+
+    .slider .moon::before {
+      content: "🌙";
+    }
   </style>
 </head>
 
 <body>
-  <!-- 🔁 Dark Mode Toggle -->
-  <div class="theme-switch-wrapper">
-    <label class="theme-switch">
+  <!-- Dark Mode Toggle -->
+  <div class="theme-switch-wrapper" role="switch" aria-checked="false" aria-label="Toggle dark mode">
+    <label class="theme-switch" for="darkModeToggle">
       <input type="checkbox" id="darkModeToggle" />
-      <span class="slider"><span class="icon"></span></span>
+      <span class="slider">
+        <span class="icon sun"></span>
+        <span class="icon moon"></span>
+      </span>
     </label>
   </div>
 
   <main>
     <section class="login" role="form" aria-label="Login form">
       <h2 class="login__title">Login</h2>
-      <div id="error-message" class="login__error"></div>
+      <div id="error-message" class="login__error" role="alert"></div>
       <form id="login-form" novalidate>
         <div class="login__form-group">
           <label for="username" class="login__label">User Name</label>
           <input type="text" id="username" name="username" class="login__input masked-username"
-            placeholder="Enter your username" required />
+            placeholder="Enter your username" required autocomplete="username" />
           <button type="button" class="toggle-visibility" aria-label="Toggle username visibility" aria-pressed="true"
             tabindex="0">
             <!-- Eye closed icon SVG (masked) -->
@@ -284,14 +440,15 @@
         <div class="login__form-group">
           <label for="password" class="login__label">Password</label>
           <input type="password" id="password" name="password" class="login__input" placeholder="Enter your password"
-            required />
-          <button type="button" class="toggle-visibility" aria-label="Toggle password visibility" aria-pressed="false"
+            required autocomplete="current-password" />
+          <button type="button" class="toggle-visibility" aria-label="Toggle password visibility" aria-pressed="true"
             tabindex="0">
-            <!-- Eye open icon SVG (password hidden) -->
+            <!-- Eye closed icon SVG (masked) -->
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round" fill="none">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a16.39 16.39 0 0 1 5-5.18"></path>
+              <path d="M1 1l22 22"></path>
+              <path d="M9.53 9.53a3 3 0 0 0 4.24 4.24"></path>
             </svg>
           </button>
         </div>
@@ -304,22 +461,25 @@
   </main>
 
   <script>
-    const toggle = document.getElementById("darkModeToggle");
-    const body = document.body;
-
-    // 🔊 Sound: short click sound (base64)
+    // Dark Mode Toggle Sound (base64 short click sound)
     const toggleSound = new Audio(
       "data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCAAMEZAAABAAgAZGF0YYAAAAD//wQAAABhZGF0YQAAAA=="
     );
     toggleSound.volume = 0.5;
 
+    const toggle = document.getElementById("darkModeToggle");
+    const body = document.body;
+    const themeSwitchWrapper = document.querySelector(".theme-switch-wrapper");
+
     function applyTheme(theme, playSound = false) {
       if (theme === "dark") {
         body.classList.add("dark");
         toggle.checked = true;
+        themeSwitchWrapper.setAttribute("aria-checked", "true");
       } else {
         body.classList.remove("dark");
         toggle.checked = false;
+        themeSwitchWrapper.setAttribute("aria-checked", "false");
       }
 
       if (playSound) {
@@ -339,7 +499,7 @@
       applyTheme(newTheme, true);
     });
 
-    // On page load
+    // On page load, set theme from localStorage or default to light
     const savedTheme = localStorage.getItem("theme") || "light";
     applyTheme(savedTheme);
 
@@ -369,62 +529,47 @@
       alert("Login successful!");
     });
 
-    // SVG icons
+    // SVG icons for toggle buttons
     const eyeShowSVG = `
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          fill="none"
-        >
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-          <circle cx="12" cy="12" r="3"></circle>
-        </svg>`;
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+        <circle cx="12" cy="12" r="3"></circle>
+      </svg>`;
 
     const eyeHideSVG = `
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          fill="none"
-        >
-          <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a16.39 16.39 0 0 1 5-5.18"></path>
-          <path d="M1 1l22 22"></path>
-          <path d="M9.53 9.53a3 3 0 0 0 4.24 4.24"></path>
-        </svg>`;
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a16.39 16.39 0 0 1 5-5.18"></path>
+        <path d="M1 1l22 22"></path>
+        <path d="M9.53 9.53a3 3 0 0 0 4.24 4.24"></path>
+      </svg>`;
 
     // Toggle visibility for username and password fields
     document.querySelectorAll(".toggle-visibility").forEach((button) => {
       button.addEventListener("click", () => {
         const input = button.previousElementSibling;
-
         if (!input) return;
 
         if (input.id === "password") {
-          // Password: toggle type
+          // Toggle password type
           if (input.type === "password") {
             input.type = "text";
-            button.innerHTML = eyeShowSVG; // eye open (showing password)
-            button.setAttribute("aria-pressed", "false"); // visible (eye open)
+            button.innerHTML = eyeShowSVG;
+            button.setAttribute("aria-pressed", "false");
           } else {
             input.type = "password";
-            button.innerHTML = eyeHideSVG; // eye closed (hiding password)
-            button.setAttribute("aria-pressed", "true"); // masked (eye closed)
+            button.innerHTML = eyeHideSVG;
+            button.setAttribute("aria-pressed", "true");
           }
         } else if (input.id === "username") {
-          // Username: toggle masking CSS class
+          // Toggle masked-username class for username
           if (input.classList.contains("masked-username")) {
             input.classList.remove("masked-username");
-            button.innerHTML = eyeShowSVG; // eye open (showing username)
-            button.setAttribute("aria-pressed", "false"); // visible (eye open)
+            button.innerHTML = eyeShowSVG;
+            button.setAttribute("aria-pressed", "false");
           } else {
             input.classList.add("masked-username");
-            button.innerHTML = eyeHideSVG; // eye closed (hiding username)
-            button.setAttribute("aria-pressed", "true"); // masked (eye closed)
+            button.innerHTML = eyeHideSVG;
+            button.setAttribute("aria-pressed", "true");
           }
         }
       });
@@ -437,19 +582,19 @@
 
       if (input.id === "password") {
         if (input.type === "password") {
-          button.innerHTML = eyeHideSVG; // eye closed (hiding password)
-          button.setAttribute("aria-pressed", "true"); // masked (eye closed)
+          button.innerHTML = eyeHideSVG;
+          button.setAttribute("aria-pressed", "true");
         } else {
-          button.innerHTML = eyeShowSVG; // eye open (showing password)
-          button.setAttribute("aria-pressed", "false"); // visible (eye open)
+          button.innerHTML = eyeShowSVG;
+          button.setAttribute("aria-pressed", "false");
         }
       } else if (input.id === "username") {
         if (input.classList.contains("masked-username")) {
-          button.innerHTML = eyeHideSVG; // eye closed (hiding username)
-          button.setAttribute("aria-pressed", "true"); // masked (eye closed)
+          button.innerHTML = eyeHideSVG;
+          button.setAttribute("aria-pressed", "true");
         } else {
-          button.innerHTML = eyeShowSVG; // eye open (showing username)
-          button.setAttribute("aria-pressed", "false"); // visible (eye open)
+          button.innerHTML = eyeShowSVG;
+          button.setAttribute("aria-pressed", "false");
         }
       }
     });
